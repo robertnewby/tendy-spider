@@ -1,0 +1,38 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "corporate_action",
+  "instrument_id": "instrument:us:example-001",
+  "action_type": "split",
+  "effective_at": "2025-05-30T13:30:00Z",
+  "ratio_numerator": 4,
+  "ratio_denominator": 1,
+  "provenance": {
+    "source": {
+      "publisher": "Example Issuer",
+      "source_record_id": "press-release-split-2025",
+      "source_url": "https://example.test/investors/split-2025"
+    },
+    "times": {
+      "observed_at": "2025-05-30T13:30:00Z",
+      "knowable_at": "2025-05-01T20:00:00Z",
+      "retrieved_at": "2025-05-01T20:05:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-05-01T20:05:00Z",
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "attribution_required",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "attribution_text": "Example Issuer",
+      "policy_as_of": "2025-05-01T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "raw",
+      "record_id": "raw:action:example-001:split-2025",
+      "parent_record_ids": []
+    }
+  }
+}

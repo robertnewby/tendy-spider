@@ -1,0 +1,4 @@
+interface:
+  display_name: "Architecture Artifacts"
+  short_description: "Create rigorous diagrams and architecture decks"
+  default_prompt: "Use $create-architecture-artifacts to build a reviewable architecture diagram set and Google Slides-ready deck."

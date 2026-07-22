@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/market-statistic.schema.json",
+  "title": "MarketStatistic",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "instrument_id", "metric_kind", "period", "value", "unit",
+        "publication_cadence"
+      ],
+      "properties": {
+        "contract_type": {"const": "market_statistic"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "metric_kind": {"enum": ["short_volume", "short_interest", "ats_volume", "other"]},
+        "period": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/period"},
+        "venue_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "value": {"type": "number", "minimum": 0},
+        "unit": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "publication_cadence": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"}
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

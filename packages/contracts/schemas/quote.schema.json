@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/quote.schema.json",
+  "title": "Quote",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": ["instrument_id", "quoted_at", "session", "unit", "currency"],
+      "properties": {
+        "contract_type": {"const": "quote"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "quoted_at": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "session": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/sessionMetadata"},
+        "unit": {"const": "price"},
+        "currency": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/currency"},
+        "bid_price": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "bid_size": {"type": ["number", "null"], "minimum": 0},
+        "ask_price": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "ask_size": {"type": ["number", "null"], "minimum": 0}
+      },
+      "anyOf": [
+        {"required": ["bid_price", "bid_size"]},
+        {"required": ["ask_price", "ask_size"]}
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

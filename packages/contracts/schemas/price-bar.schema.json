@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/price-bar.schema.json",
+  "title": "PriceBar",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "instrument_id", "bar_start", "bar_end", "interval", "session",
+        "unit", "currency", "adjustment", "open", "high", "low", "close"
+      ],
+      "properties": {
+        "contract_type": {"const": "price_bar"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "bar_start": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "bar_end": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "interval": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "session": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/sessionMetadata"},
+        "unit": {"const": "price"},
+        "currency": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/currency"},
+        "adjustment": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/adjustment"},
+        "open": {"type": "number", "exclusiveMinimum": 0},
+        "high": {"type": "number", "exclusiveMinimum": 0},
+        "low": {"type": "number", "exclusiveMinimum": 0},
+        "close": {"type": "number", "exclusiveMinimum": 0},
+        "volume": {"type": ["number", "null"], "minimum": 0}
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,43 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "instrument_identity",
+  "instrument_id": "instrument:us:037833100",
+  "asset_class": "equity",
+  "name": "Example Technology Inc.",
+  "issuer_id": "issuer:0000320193",
+  "primary_venue_id": "venue:XNAS",
+  "currency": "USD",
+  "active_from": "1980-12-12T14:30:00Z",
+  "provenance": {
+    "source": {
+      "publisher": "Example Official Registry",
+      "source_record_id": "registry-037833100",
+      "source_url": "https://example.test/instruments/037833100",
+      "dataset": "instrument-master"
+    },
+    "times": {
+      "observed_at": "2026-07-18T00:00:00Z",
+      "knowable_at": "2026-07-18T00:00:00Z",
+      "retrieved_at": "2026-07-18T01:00:00Z",
+      "expires_at": "2026-07-19T01:00:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2026-07-18T01:00:00Z",
+      "max_age_seconds": 86400,
+      "latency_seconds": 3600
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "model_training_allowed": false,
+      "policy_as_of": "2026-07-18T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "raw",
+      "record_id": "raw:instrument:037833100",
+      "parent_record_ids": []
+    }
+  }
+}

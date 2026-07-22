@@ -1,0 +1,34 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/filing.schema.json",
+  "title": "Filing",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "instrument_id", "filing_id", "form", "filed_at", "amendment",
+        "document_url"
+      ],
+      "properties": {
+        "contract_type": {"const": "filing"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "filing_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "form": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "filed_at": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "period_end": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "amendment": {"type": "boolean"},
+        "amends_filing_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "document_url": {"type": "string", "format": "uri"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"amendment": {"const": true}}},
+          "then": {"required": ["amends_filing_id"]},
+          "else": {"not": {"required": ["amends_filing_id"]}}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

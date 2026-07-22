@@ -1,0 +1,51 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "market_statistic",
+  "instrument_id": "instrument:us:example-001",
+  "metric_kind": "short_volume",
+  "period": {
+    "start": "2026-07-17T04:00:00Z",
+    "end": "2026-07-18T03:59:59Z"
+  },
+  "venue_id": "venue:FINRA-CONSOLIDATED",
+  "value": 250000,
+  "unit": "shares",
+  "publication_cadence": "daily",
+  "provenance": {
+    "source": {
+      "publisher": "Financial Industry Regulatory Authority",
+      "source_record_id": "CNMSshvol20260717:EXAMPLE",
+      "source_url": "https://example.test/finra/CNMSshvol20260717.txt",
+      "dataset": "daily-short-sale-volume"
+    },
+    "times": {
+      "observed_at": "2026-07-18T03:59:59Z",
+      "knowable_at": "2026-07-18T10:00:00Z",
+      "retrieved_at": "2026-07-18T10:05:00Z",
+      "expires_at": "2026-07-19T10:00:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2026-07-18T10:05:00Z",
+      "max_age_seconds": 86400,
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "policy_as_of": "2026-07-18T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "normalized",
+      "record_id": "normalized:short-volume:example-001:2026-07-17",
+      "parent_record_ids": ["raw:finra:CNMSshvol20260717:EXAMPLE"],
+      "transformation": {
+        "name": "normalize_short_volume",
+        "code_version": "git:6666666",
+        "data_version": "finra-short-volume:2026-07-17",
+        "parameters": {"metric_kind": "short_volume"}
+      }
+    }
+  }
+}

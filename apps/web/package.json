@@ -1,0 +1,16 @@
+{
+  "name": "@tendy-spider/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint \"src/**/*.{ts,tsx}\" --no-error-on-unmatched-pattern",
+    "typecheck": "tsc --noEmit --project tsconfig.json",
+    "build": "tsc --project tsconfig.build.json && cp src/index.html dist/index.html && cp src/styles.css dist/styles.css",
+    "dev": "npm run build && node scripts/dev-server.mjs",
+    "test:unit": "npm run build && node --test test/*.test.mjs",
+    "test:integration": "node -e \"console.log('No frontend integration tests are defined for Milestone 0.')\""
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "filing",
+  "instrument_id": "instrument:us:example-001",
+  "filing_id": "0000000000-25-000002",
+  "form": "10-K/A",
+  "filed_at": "2025-04-10T20:30:00Z",
+  "period_end": "2024-12-31T23:59:59Z",
+  "amendment": true,
+  "amends_filing_id": "0000000000-25-000001",
+  "document_url": "https://www.sec.gov/Archives/edgar/data/1/example.htm",
+  "provenance": {
+    "source": {
+      "publisher": "U.S. Securities and Exchange Commission",
+      "source_record_id": "0000000000-25-000002",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1/example.htm"
+    },
+    "times": {
+      "observed_at": "2025-04-10T20:30:00Z",
+      "knowable_at": "2025-04-10T20:30:00Z",
+      "retrieved_at": "2025-04-10T20:35:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-04-10T20:35:00Z",
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "policy_as_of": "2025-04-10T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "raw",
+      "record_id": "raw:sec:0000000000-25-000002",
+      "parent_record_ids": []
+    }
+  }
+}

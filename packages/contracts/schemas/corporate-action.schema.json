@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/corporate-action.schema.json",
+  "title": "CorporateAction",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": ["instrument_id", "action_type", "effective_at"],
+      "properties": {
+        "contract_type": {"const": "corporate_action"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "action_type": {
+          "enum": ["split", "reverse_split", "cash_dividend", "stock_dividend", "rename", "merger", "spinoff"]
+        },
+        "effective_at": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "ratio_numerator": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "ratio_denominator": {"type": ["number", "null"], "exclusiveMinimum": 0},
+        "cash_amount": {"type": ["number", "null"], "minimum": 0},
+        "currency": {
+          "anyOf": [
+            {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/currency"},
+            {"type": "null"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"action_type": {"enum": ["split", "reverse_split", "stock_dividend"]}}},
+          "then": {"required": ["ratio_numerator", "ratio_denominator"]}
+        },
+        {
+          "if": {"properties": {"action_type": {"const": "cash_dividend"}}},
+          "then": {"required": ["cash_amount", "currency"]}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

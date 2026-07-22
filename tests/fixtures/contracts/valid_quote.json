@@ -1,0 +1,47 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "quote",
+  "instrument_id": "instrument:us:example-001",
+  "quoted_at": "2026-07-18T15:00:00.123Z",
+  "session": {
+    "venue_id": "venue:XNAS",
+    "session": "regular",
+    "source_timezone": "America/New_York"
+  },
+  "unit": "price",
+  "currency": "USD",
+  "bid_price": 101.10,
+  "bid_size": 200,
+  "ask_price": 101.12,
+  "ask_size": 100,
+  "provenance": {
+    "source": {
+      "publisher": "Licensed Fixture Quote Source",
+      "source_record_id": "quote-example-001-1721314800123",
+      "dataset": "delayed-quotes"
+    },
+    "times": {
+      "observed_at": "2026-07-18T15:00:00.123Z",
+      "knowable_at": "2026-07-18T15:15:00.123Z",
+      "retrieved_at": "2026-07-18T15:15:01Z",
+      "expires_at": "2026-07-18T15:15:11Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2026-07-18T15:15:01Z",
+      "max_age_seconds": 10,
+      "latency_seconds": 1
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "transient",
+      "redistribution": "prohibited",
+      "policy_as_of": "2026-01-01T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "raw",
+      "record_id": "raw:quote:example-001:1721314800123",
+      "parent_record_ids": []
+    }
+  }
+}

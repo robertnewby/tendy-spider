@@ -79,6 +79,30 @@ Postgres is sufficient initially. Add TimescaleDB/ClickHouse only after query me
 - backfills and reprocessing;
 - retention and license-policy enforcement.
 
+## Milestone 0 implementation boundary
+
+The repository currently implements the foundation, not the market-research
+vertical slice:
+
+- `apps/web` is a dependency-light TypeScript shell that consumes the
+  operational readiness API and renders ready, degraded, unready, loading,
+  connection-error, and invalid-response states.
+- `services/api` is a FastAPI service with provider-neutral dependency-probe
+  interfaces. `GET /health/live` is process-only. `GET /health/ready` and
+  `GET /health` report Postgres, Redis, read-only API, and background-job
+  readiness without fabricating availability.
+- `packages/contracts` contains canonical JSON Schema 2020-12 documents and
+  Pydantic validation for source identity, time semantics, freshness,
+  adjustment, policy, lineage, and the Milestone 0 domain records.
+- `infra/compose.yaml` pins local Postgres and Redis services. Redis remains
+  non-authoritative.
+- `.github/workflows/ci.yml` and the root `Makefile` run locked formatting,
+  linting, typing, unit, integration-fixture, and secret checks.
+
+The health payload is an operational DTO and is intentionally not represented
+as market-data evidence. TypeScript generation from the canonical market-data
+schemas remains future work before frontend research payloads are introduced.
+
 ## Canonical entities
 
 - `Instrument` and temporal `SymbolMapping`
@@ -131,7 +155,9 @@ Do not allow recursive uncontrolled agent spawning. Set hard concurrency and tot
 
 ### Local
 
-- Docker Compose: API, worker, Postgres, Redis;
+- `make dev`: Postgres, Redis, API, and web workspace;
+- separate process targets for API/web development without restarting
+  infrastructure;
 - fixture provider for all tests;
 - optional live adapters enabled only by environment variables.
 

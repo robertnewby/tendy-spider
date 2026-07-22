@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/macro-observation.schema.json",
+  "title": "MacroObservation",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "series_id", "period", "value", "unit", "frequency", "vintage_date",
+        "observation_status"
+      ],
+      "properties": {
+        "contract_type": {"const": "macro_observation"},
+        "series_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "period": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/period"},
+        "value": {"type": ["number", "string"]},
+        "unit": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "frequency": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "vintage_date": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "observation_status": {"enum": ["preliminary", "revised", "final"]},
+        "supersedes_record_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"observation_status": {"const": "revised"}}},
+          "then": {"required": ["supersedes_record_id"]}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

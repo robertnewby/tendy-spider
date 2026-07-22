@@ -1,0 +1,71 @@
+%% Artifact ID: TS-ARC-001
+%% Title: Tendy Spider target container/runtime view
+%% State: MIXED — target runtime with frozen Milestone 0 health contract
+%% Status: DRAFT — source-only; deterministic render and visual QA are not available
+%% As of: 2026-07-19
+%% Review question: What must run, persist data, and cross external boundaries in the provider-neutral target architecture?
+%% Alt text: A research user reaches a TypeScript web client and Python API; the API and worker use provider-neutral external interfaces, Postgres, object storage, and non-authoritative Redis under explicit provenance, licensing, and read-only constraints.
+%% Evidence: DECISIONS.md D-001 through D-008, D-010, D-012, D-013; docs/ARCHITECTURE.md; Makefile; services/api/health.py; services/api/main.py; apps/web
+flowchart TB
+    PERSON_RESEARCHER["Research user<br/>Person<br/>Requests evidence-backed, read-only market research"]
+
+    subgraph SYS_TENDY_SPIDER["Tendy Spider system boundary — TARGET / PROPOSED"]
+        direction TB
+
+        subgraph ZONE_USER_EDGE["User-facing runtime"]
+            CNT_WEB["Web research workspace<br/>Container: TypeScript web client<br/>CURRENT M0 evidence-first health shell; TARGET research workspace"]
+        end
+
+        subgraph ZONE_APPLICATION["Application runtime — deployment target unselected"]
+            CNT_API["API and analytics service<br/>Container: FastAPI/Python service<br/>CURRENT M0 operational health boundary; TARGET provider-neutral orchestration and deterministic tools"]
+            CNT_WORKER["Background worker<br/>Container: Python worker — TARGET / NOT IMPLEMENTED<br/>Runs bounded ingestion, reconciliation, and long-running research jobs"]
+        end
+
+        subgraph ZONE_DATA["Data and coordination plane"]
+            STORE_POSTGRES[("Postgres<br/>Data store<br/>CURRENT pinned Compose source; Docker execution UNVERIFIED; TARGET authoritative persistence")]
+            STORE_OBJECT[("Object storage<br/>Data store — TARGET / NOT IMPLEMENTED<br/>Persists permitted immutable source documents, raw payloads, and large snapshots")]
+            STORE_REDIS[("Redis<br/>Ephemeral store<br/>CURRENT pinned Compose source; Docker execution UNVERIFIED; remains non-authoritative")]
+        end
+    end
+
+    subgraph ZONE_EXTERNAL["External trust boundary"]
+        EXT_LLM_PROVIDER["Model provider interface<br/>External system — PROPOSED / UNSELECTED<br/>Returns tool-oriented model responses under configured budgets"]
+        EXT_DATA_PROVIDERS["Public, authorized, or licensed data providers<br/>External systems — TARGET; selection varies<br/>Publish delayed/EOD market data and primary-source documents with permission constraints"]
+    end
+
+    PERSON_RESEARCHER -->|"Submits read-only research requests [HTTPS]"| CNT_WEB
+    CNT_WEB -->|"Reads operational readiness [GET /health/ready; CURRENT M0]"| CNT_API
+    CNT_WEB -.->|"TARGET: requests research resources and receives streamed status [REST plus SSE or WebSocket]"| CNT_API
+    CNT_API -.->|"TARGET: invokes model reasoning without exposing provider SDKs to core logic [provider interface]"| EXT_LLM_PROVIDER
+    CNT_API -.->|"TARGET: retrieves observations/documents with source and time provenance [authorized API]"| EXT_DATA_PROVIDERS
+    CNT_API -->|"Probes dependency readiness [TCP; CURRENT M0]"| STORE_POSTGRES
+    CNT_API -->|"Probes dependency readiness [TCP; CURRENT M0]"| STORE_REDIS
+    CNT_API -.->|"TARGET: reads/writes normalized observations, lineage, and audit records"| STORE_POSTGRES
+    CNT_API -.->|"TARGET: reads permitted evidence documents and immutable raw objects [object API]"| STORE_OBJECT
+    CNT_API -.->|"TARGET: caches results and enqueues bounded work [non-authoritative]"| STORE_REDIS
+    CNT_WORKER -.->|"TARGET: claims bounded jobs and records retry state [queue semantics]"| STORE_REDIS
+    CNT_WORKER -.->|"TARGET: retrieves scheduled inputs with license/rate-limit enforcement [authorized API]"| EXT_DATA_PROVIDERS
+    CNT_WORKER -.->|"TARGET: writes normalized point-in-time observations and lineage"| STORE_POSTGRES
+    CNT_WORKER -.->|"TARGET: writes permitted immutable raw payloads and documents [object API]"| STORE_OBJECT
+    CNT_API -.->|"TARGET: returns cited results with freshness, adjustment, uncertainty, and partial states [HTTPS]"| CNT_WEB
+    CNT_WEB -->|"Displays evidence-backed results; never live order execution"| PERSON_RESEARCHER
+
+    LEGEND_STATUS["Legend<br/>CURRENT M0 = implemented source; SMOKE-TESTED applies to API/web process path<br/>UNVERIFIED = Docker-backed runtime was not executed on this host<br/>TARGET / NOT IMPLEMENTED = accepted direction beyond current slice<br/>UNSELECTED = open provider or deployment choice; dashed relationships are target or explanatory"]
+    %% Stable element ID retained as the health policy moved from proposed to frozen.
+    POLICY_HEALTH_PROPOSED["Accepted D-013 / implemented M0 health contract<br/>GET /health/live: 200 live, process-only. GET /health/ready and GET /health: readiness.<br/>Postgres loss: 503 unready, both capabilities unready. Redis-only loss: 200 degraded, read_only_api degraded, background_jobs unready."]
+    LEGEND_STATUS -.-> CNT_WORKER
+    POLICY_HEALTH_PROPOSED -.-> CNT_API
+    POLICY_HEALTH_PROPOSED -.-> CNT_WORKER
+    CNT_WORKER -.->|"Runs model work only when a bounded job requires it"| EXT_LLM_PROVIDER
+
+    classDef person fill:#e8f1ff,stroke:#2457a6,color:#102a43,stroke-width:2px;
+    classDef target fill:#eef7ee,stroke:#2f6f3e,color:#173b20,stroke-width:2px;
+    classDef store fill:#fff5dd,stroke:#8a5a00,color:#4f3500,stroke-width:2px;
+    classDef external fill:#f4f0fa,stroke:#69439b,color:#35204f,stroke-width:2px;
+    classDef legend fill:#ffffff,stroke:#5d6773,color:#26313d,stroke-dasharray: 4 3;
+
+    class PERSON_RESEARCHER person;
+    class CNT_WEB,CNT_API,CNT_WORKER target;
+    class STORE_POSTGRES,STORE_OBJECT,STORE_REDIS store;
+    class EXT_LLM_PROVIDER,EXT_DATA_PROVIDERS external;
+    class LEGEND_STATUS,POLICY_HEALTH_PROPOSED legend;

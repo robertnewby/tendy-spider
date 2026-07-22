@@ -1,0 +1,75 @@
+%% Artifact ID: TS-ARC-002
+%% Title: Milestone 0 package, dependency, and ownership view
+%% State: MIXED — implemented Milestone 0 foundation with explicitly deferred research-contract consumption
+%% Status: DRAFT — source-only; deterministic render and visual QA are not available
+%% As of: 2026-07-19
+%% Review question: Which Milestone 0 repository areas may depend on which canonical artifacts, and who owns each change surface?
+%% Alt text: Current root tooling waits for Postgres and Redis before supervising API and web processes; the web consumes the API health DTO, while canonical market-data schemas remain separate until future TypeScript generation and research payload integration.
+%% Evidence: TASK.md Milestone 0; DECISIONS.md D-003, D-005, D-006, D-009, D-012, D-013; docs/ARCHITECTURE.md Milestone 0 boundary; Makefile; scripts/dev.py; services/api/main.py
+flowchart LR
+    subgraph REPO_ROOT["Repository foundation — CURRENT MILESTONE 0 SOURCE"]
+        direction TB
+
+        ROOT_TOOLING["Root Makefile commands<br/>Repository capability — owner: lead + platform/quality<br/>IMPLEMENTED: make dev waits for Compose, then starts supervised API/web; full Docker path UNVERIFIED"]
+        DEV_SUPERVISOR["scripts/dev.py<br/>Developer-process supervisor — owner: lead + platform/quality<br/>IMPLEMENTED and smoke-tested via make dev-apps; stops both process groups when either exits"]
+        CI_PIPELINE["CI and secret scanning<br/>Repository capability — owner: platform/quality<br/>Runs formatting, linting, typing, unit, integration-fixture, and secret checks"]
+
+        subgraph OWNER_FRONTEND["Frontend ownership"]
+            CNT_WEB["apps/web<br/>Current Milestone 0 container package — owner: frontend<br/>TypeScript evidence-first shell consuming the operational readiness DTO"]
+        end
+
+        subgraph OWNER_BACKEND["Backend ownership"]
+            CNT_API["services/api<br/>Current Milestone 0 container package — owner: backend<br/>FastAPI liveness/readiness DTO boundary; future orchestration seam"]
+        end
+
+        subgraph OWNER_CONTRACTS["Contracts and data ownership"]
+            PKG_CONTRACTS["packages/contracts<br/>Current canonical package — owner: contracts/data<br/>JSON Schema 2020-12 plus Pydantic; TypeScript generation is DEFERRED"]
+        end
+
+        subgraph OWNER_PLATFORM["Platform and quality ownership"]
+            INFRA_LOCAL["infra<br/>Current environment package — owner: platform/quality<br/>Pinned Postgres/Redis Compose with health checks; Docker execution UNVERIFIED on this host"]
+            TEST_FIXTURES["tests/fixtures<br/>Test-data package — owner: contracts/data + platform/quality coordination<br/>Small redistributable provider responses; no paid credentials or raw proprietary data"]
+        end
+    end
+
+    CNT_WEB -->|"Consumes current operational readiness DTO [GET /health/ready; configured-origin browser access]"| CNT_API
+    CNT_WEB -.->|"FUTURE: consumes generated TypeScript market-data contracts when research payloads are introduced"| PKG_CONTRACTS
+    CNT_API -.->|"FUTURE: validates research payloads against canonical contracts; health DTO remains separate"| PKG_CONTRACTS
+    PKG_CONTRACTS -->|"Validates fixtures for source identity, observation/retrieval time, UTC semantics, and freshness"| TEST_FIXTURES
+    ROOT_TOOLING -->|"Runs docker compose up -d --wait before application startup [IMPLEMENTED; Docker execution UNVERIFIED]"| INFRA_LOCAL
+    ROOT_TOOLING -->|"Runs after Compose succeeds; also powers make dev-apps without Compose"| DEV_SUPERVISOR
+    DEV_SUPERVISOR -->|"Starts and supervises the Python API [IMPLEMENTED; make dev-apps smoke-tested]"| CNT_API
+    DEV_SUPERVISOR -->|"Starts and supervises the TypeScript web shell [IMPLEMENTED; make dev-apps smoke-tested]"| CNT_WEB
+    CI_PIPELINE -->|"Checks Python formatting, linting, typing, and offline tests"| CNT_API
+    CI_PIPELINE -->|"Checks TypeScript formatting, linting, typing, and offline tests"| CNT_WEB
+    CI_PIPELINE -->|"Checks schema generation/validation and contract tests"| PKG_CONTRACTS
+    CI_PIPELINE -->|"Runs integration tests only against redistributable fixtures"| TEST_FIXTURES
+    CI_PIPELINE -->|"Validates local-infrastructure configuration and scans for secrets"| INFRA_LOCAL
+    INFRA_LOCAL -->|"Provides configured local endpoints when Compose executes; Docker-backed runtime UNVERIFIED"| CNT_API
+
+    RULE_PROVIDER_NEUTRAL["Dependency rule<br/>Core contracts and domain logic must not import a vendor SDK.<br/>Live providers remain outside Milestone 0 and require documented rights."]
+    RULE_SERIALIZATION["Coordination rule<br/>Canonical contract changes are serialized through contracts/data ownership.<br/>Root documentation and shared decisions remain lead-owned."]
+    %% Stable element ID retained as the health policy moved from proposed to frozen.
+    RULE_HEALTH_PROPOSED["Accepted D-013 / implemented M0 health contract<br/>GET /health/live: 200 live and no dependency probes. GET /health/ready plus GET /health alias: readiness.<br/>DTO reports UTC checked_at, dependency status/detail, and separate read_only_api/background_jobs status."]
+    RULE_PROVIDER_NEUTRAL -.-> PKG_CONTRACTS
+    RULE_PROVIDER_NEUTRAL -.-> CNT_API
+    RULE_SERIALIZATION -.-> PKG_CONTRACTS
+    RULE_SERIALIZATION -.-> ROOT_TOOLING
+    RULE_HEALTH_PROPOSED -.-> CNT_API
+    RULE_HEALTH_PROPOSED -.-> INFRA_LOCAL
+
+    LEGEND_M0["Legend<br/>Solid arrow = implemented source or current dependency/build action<br/>Dashed arrow = future integration or governing constraint<br/>SMOKE-TESTED = API/web process path executed; UNVERIFIED = Docker-backed full make dev was not executed"]
+
+    classDef root fill:#e8f1ff,stroke:#2457a6,color:#102a43,stroke-width:2px;
+    classDef frontend fill:#eef7ee,stroke:#2f6f3e,color:#173b20,stroke-width:2px;
+    classDef backend fill:#fff5dd,stroke:#8a5a00,color:#4f3500,stroke-width:2px;
+    classDef contracts fill:#f4f0fa,stroke:#69439b,color:#35204f,stroke-width:2px;
+    classDef platform fill:#edf4f7,stroke:#3b6473,color:#1d3640,stroke-width:2px;
+    classDef rule fill:#ffffff,stroke:#5d6773,color:#26313d,stroke-dasharray: 4 3;
+
+    class ROOT_TOOLING,DEV_SUPERVISOR,CI_PIPELINE root;
+    class CNT_WEB frontend;
+    class CNT_API backend;
+    class PKG_CONTRACTS contracts;
+    class INFRA_LOCAL,TEST_FIXTURES platform;
+    class RULE_PROVIDER_NEUTRAL,RULE_SERIALIZATION,RULE_HEALTH_PROPOSED,LEGEND_M0 rule;

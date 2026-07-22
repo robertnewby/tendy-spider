@@ -1,0 +1,44 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "document",
+  "document_id": "document:example-news:2026-001",
+  "document_kind": "news",
+  "title": "Example issuer announces a public operational update",
+  "published_at": "2026-07-18T12:00:00-04:00",
+  "updated_at": "2026-07-18T12:30:00-04:00",
+  "language": "en-US",
+  "canonical_url": "https://example.test/news/2026-001",
+  "instrument_ids": ["instrument:us:example-001"],
+  "full_text_storage": "metadata_only",
+  "provenance": {
+    "source": {
+      "publisher": "Example Newsroom",
+      "source_record_id": "2026-001",
+      "source_url": "https://example.test/news/2026-001",
+      "dataset": "issuer-news"
+    },
+    "times": {
+      "observed_at": "2026-07-18T12:00:00-04:00",
+      "knowable_at": "2026-07-18T12:00:00-04:00",
+      "retrieved_at": "2026-07-18T16:35:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2026-07-18T16:35:00Z",
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "attribution_required",
+      "storage": "transient",
+      "redistribution": "prohibited",
+      "attribution_text": "Example Newsroom",
+      "terms_url": "https://example.test/terms",
+      "policy_as_of": "2026-07-18T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "raw",
+      "record_id": "raw:document:example-news:2026-001",
+      "parent_record_ids": []
+    }
+  }
+}

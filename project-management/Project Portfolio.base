@@ -1,0 +1,128 @@
+filters:
+  and:
+    - 'file.inFolder("project-management")'
+    - '!file.inFolder("project-management/templates")'
+    - 'file.ext == "md"'
+properties:
+  id:
+    displayName: ID
+  title:
+    displayName: Title
+  status:
+    displayName: Status
+  priority:
+    displayName: Priority
+  milestone:
+    displayName: Milestone
+  owner_agent:
+    displayName: Owner
+  reviewer_agent:
+    displayName: Reviewer
+  next_action:
+    displayName: Next action
+  updated:
+    displayName: Updated
+  due:
+    displayName: Due
+  severity:
+    displayName: Severity
+  decision_authority:
+    displayName: Authority
+views:
+  - type: table
+    name: Active Work
+    filters:
+      and:
+        - 'type == "work-item"'
+        - 'status != "done"'
+        - 'status != "deferred"'
+    groupBy:
+      property: note.status
+      direction: ASC
+    order:
+      - file.name
+      - note.priority
+      - note.milestone
+      - note.owner_agent
+      - note.reviewer_agent
+      - note.next_action
+      - note.updated
+      - note.due
+  - type: table
+    name: Milestones
+    filters:
+      and:
+        - 'type == "milestone"'
+    order:
+      - note.id
+      - note.status
+      - note.priority
+      - note.owner_agent
+      - note.updated
+  - type: table
+    name: Blocked
+    filters:
+      and:
+        - 'type == "work-item"'
+        - 'status == "blocked"'
+    order:
+      - file.name
+      - note.priority
+      - note.owner_agent
+      - note.blocked_reason
+      - note.next_action
+      - note.updated
+  - type: table
+    name: Open Decisions
+    filters:
+      and:
+        - 'type == "decision"'
+        - 'status == "open"'
+    order:
+      - note.id
+      - note.priority
+      - note.decision_authority
+      - note.owner_agent
+      - note.next_action
+      - note.updated
+  - type: table
+    name: Open Risks
+    filters:
+      and:
+        - 'type == "risk"'
+        - 'status == "open"'
+    groupBy:
+      property: note.severity
+      direction: DESC
+    order:
+      - file.name
+      - note.priority
+      - note.owner_agent
+      - note.next_action
+      - note.updated
+  - type: table
+    name: By Agent
+    filters:
+      and:
+        - 'type == "work-item"'
+        - 'status != "done"'
+    groupBy:
+      property: note.owner_agent
+      direction: ASC
+    order:
+      - file.name
+      - note.status
+      - note.priority
+      - note.milestone
+      - note.next_action
+  - type: table
+    name: Done
+    filters:
+      and:
+        - 'type == "work-item"'
+        - 'status == "done"'
+    order:
+      - file.name
+      - note.milestone
+      - note.owner_agent
+      - note.updated

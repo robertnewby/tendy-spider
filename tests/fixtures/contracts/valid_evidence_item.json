@@ -1,0 +1,49 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "evidence_item",
+  "evidence_id": "evidence:revenue-growth:example-001",
+  "claim": "Reported annual revenue increased after accounting for the restatement.",
+  "support_type": "derived",
+  "source_record_ids": [
+    "normalized:fact:revenue:2023:reported",
+    "normalized:fact:revenue:2024:restated"
+  ],
+  "locator": "comparison/revenue",
+  "confidence": 0.98,
+  "provenance": {
+    "source": {
+      "publisher": "Tendy Spider deterministic comparison tool",
+      "source_record_id": "tool-call:compare-revenue:001"
+    },
+    "times": {
+      "observed_at": "2024-12-31T23:59:59Z",
+      "knowable_at": "2025-04-10T20:30:00Z",
+      "retrieved_at": "2025-04-10T20:35:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-04-10T20:35:00Z",
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "derived_only",
+      "policy_as_of": "2025-04-10T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "derived",
+      "record_id": "derived:evidence:revenue-growth:example-001",
+      "parent_record_ids": [
+        "normalized:fact:revenue:2023:reported",
+        "normalized:fact:revenue:2024:restated"
+      ],
+      "transformation": {
+        "name": "compare_period_values",
+        "code_version": "git:5555555",
+        "data_version": "facts-snapshot:2025-04-10",
+        "parameters": {"concept": "Revenue"}
+      }
+    }
+  }
+}

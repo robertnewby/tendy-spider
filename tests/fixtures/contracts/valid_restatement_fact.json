@@ -1,0 +1,54 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "fundamental_fact",
+  "instrument_id": "instrument:us:example-001",
+  "concept": "Revenue",
+  "value": 102500000,
+  "unit": "USD",
+  "period": {
+    "start": "2024-01-01T00:00:00Z",
+    "end": "2024-12-31T23:59:59Z",
+    "fiscal_year": 2024,
+    "fiscal_period": "FY"
+  },
+  "form": "10-K/A",
+  "filing_id": "0000000000-25-000002",
+  "fact_status": "restated",
+  "supersedes_record_id": "normalized:fact:revenue:2024:original",
+  "provenance": {
+    "source": {
+      "publisher": "U.S. Securities and Exchange Commission",
+      "source_record_id": "0000000000-25-000002",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1/example.htm",
+      "dataset": "companyfacts"
+    },
+    "times": {
+      "observed_at": "2024-12-31T23:59:59Z",
+      "knowable_at": "2025-04-10T20:30:00Z",
+      "retrieved_at": "2025-04-10T20:35:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-04-10T20:35:00Z",
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "model_training_allowed": true,
+      "policy_as_of": "2025-04-10T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "normalized",
+      "record_id": "normalized:fact:revenue:2024:restated",
+      "parent_record_ids": ["raw:sec:0000000000-25-000002"],
+      "transformation": {
+        "name": "normalize_xbrl_fact",
+        "code_version": "git:3333333",
+        "data_version": "sec-companyfacts:2025-04-10",
+        "parameters": {"taxonomy": "us-gaap"}
+      }
+    }
+  }
+}

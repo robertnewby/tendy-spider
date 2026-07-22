@@ -1,0 +1,67 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "price_bar",
+  "instrument_id": "instrument:us:example-001",
+  "bar_start": "2025-06-02T13:30:00Z",
+  "bar_end": "2025-06-02T20:00:00Z",
+  "interval": "1d",
+  "session": {
+    "venue_id": "venue:XNAS",
+    "session": "regular",
+    "source_timezone": "America/New_York"
+  },
+  "unit": "price",
+  "currency": "USD",
+  "adjustment": {
+    "mode": "split",
+    "methodology": "Backward adjusted for declared splits only",
+    "adjustment_as_of": "2026-07-18T00:00:00Z"
+  },
+  "open": 50.0,
+  "high": 52.0,
+  "low": 49.5,
+  "close": 51.25,
+  "volume": 1200000,
+  "provenance": {
+    "source": {
+      "publisher": "Licensed Fixture Price Source",
+      "source_record_id": "bar-example-001-2025-06-02",
+      "dataset": "daily-bars"
+    },
+    "times": {
+      "observed_at": "2025-06-02T20:00:00Z",
+      "knowable_at": "2025-06-02T20:15:00Z",
+      "retrieved_at": "2025-06-02T20:20:00Z",
+      "expires_at": "2025-06-03T20:15:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-06-02T20:20:00Z",
+      "max_age_seconds": 86400,
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "time_limited",
+      "retention_days": 30,
+      "redistribution": "derived_only",
+      "model_training_allowed": false,
+      "terms_url": "https://example.test/market-data-terms",
+      "policy_as_of": "2025-01-01T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "normalized",
+      "record_id": "normalized:bar:example-001:2025-06-02:split",
+      "parent_record_ids": [
+        "raw:bar:example-001:2025-06-02",
+        "raw:action:example-001:split-2025"
+      ],
+      "transformation": {
+        "name": "normalize_and_adjust_bar",
+        "code_version": "git:2222222",
+        "data_version": "daily-bars:2025-06-03",
+        "parameters": {"adjustment": "split"}
+      }
+    }
+  }
+}
