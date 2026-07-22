@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/document.schema.json",
+  "title": "Document",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "document_id", "document_kind", "title", "published_at", "language",
+        "canonical_url", "instrument_ids", "full_text_storage"
+      ],
+      "properties": {
+        "contract_type": {"const": "document"},
+        "document_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "document_kind": {"enum": ["filing", "news", "press_release", "transcript", "research", "other"]},
+        "title": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "published_at": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "updated_at": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "language": {"type": "string", "pattern": "^[a-z]{2,3}(-[A-Z]{2})?$"},
+        "canonical_url": {"type": "string", "format": "uri"},
+        "instrument_ids": {
+          "type": "array",
+          "items": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+          "uniqueItems": true
+        },
+        "content_hash": {"type": "string", "pattern": "^sha256:[0-9a-f]{64}$"},
+        "full_text_storage": {"enum": ["stored", "metadata_only", "prohibited"]}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"full_text_storage": {"const": "stored"}}},
+          "then": {"required": ["content_hash"]}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

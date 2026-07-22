@@ -1,0 +1,200 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/common.schema.json",
+  "title": "Tendy Spider common contract definitions",
+  "$defs": {
+    "contractVersion": {
+      "const": "1.0.0"
+    },
+    "nonEmptyString": {
+      "type": "string",
+      "minLength": 1
+    },
+    "awareTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "(Z|[+-][0-9]{2}:[0-9]{2})$"
+    },
+    "sourceIdentity": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["publisher"],
+      "properties": {
+        "publisher": {"$ref": "#/$defs/nonEmptyString"},
+        "source_record_id": {"$ref": "#/$defs/nonEmptyString"},
+        "source_url": {"type": "string", "format": "uri"},
+        "dataset": {"$ref": "#/$defs/nonEmptyString"}
+      },
+      "anyOf": [
+        {"required": ["source_record_id"]},
+        {"required": ["source_url"]}
+      ]
+    },
+    "observationTimes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["observed_at", "knowable_at", "retrieved_at"],
+      "properties": {
+        "observed_at": {"$ref": "#/$defs/awareTimestamp"},
+        "knowable_at": {"$ref": "#/$defs/awareTimestamp"},
+        "retrieved_at": {"$ref": "#/$defs/awareTimestamp"},
+        "expires_at": {"$ref": "#/$defs/awareTimestamp"}
+      }
+    },
+    "freshness": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "determined_at"],
+      "properties": {
+        "status": {"enum": ["fresh", "stale", "expired", "unknown"]},
+        "determined_at": {"$ref": "#/$defs/awareTimestamp"},
+        "max_age_seconds": {"type": "integer", "minimum": 0},
+        "latency_seconds": {"type": "integer", "minimum": 0},
+        "reason": {"$ref": "#/$defs/nonEmptyString"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"enum": ["stale", "expired", "unknown"]}}},
+          "then": {"required": ["reason"]}
+        }
+      ]
+    },
+    "sessionMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["session", "source_timezone"],
+      "properties": {
+        "venue_id": {"$ref": "#/$defs/nonEmptyString"},
+        "session": {
+          "enum": ["pre_market", "regular", "after_hours", "overnight", "continuous", "unknown"]
+        },
+        "source_timezone": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "adjustment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode"],
+      "properties": {
+        "mode": {"enum": ["none", "split", "split_dividend", "provider_defined"]},
+        "methodology": {"$ref": "#/$defs/nonEmptyString"},
+        "adjustment_as_of": {"$ref": "#/$defs/awareTimestamp"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mode": {"const": "provider_defined"}}},
+          "then": {"required": ["methodology"]}
+        }
+      ]
+    },
+    "usagePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "display",
+        "storage",
+        "redistribution",
+        "policy_as_of"
+      ],
+      "properties": {
+        "display": {"enum": ["allowed", "attribution_required", "prohibited", "unknown"]},
+        "storage": {"enum": ["permanent", "time_limited", "transient", "prohibited", "unknown"]},
+        "retention_days": {"type": "integer", "minimum": 0},
+        "redistribution": {"enum": ["allowed", "derived_only", "prohibited", "unknown"]},
+        "attribution_text": {"$ref": "#/$defs/nonEmptyString"},
+        "model_training_allowed": {"type": ["boolean", "null"]},
+        "terms_url": {"type": "string", "format": "uri"},
+        "policy_as_of": {"$ref": "#/$defs/awareTimestamp"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"storage": {"const": "time_limited"}}},
+          "then": {"required": ["retention_days"]}
+        },
+        {
+          "if": {"properties": {"display": {"const": "attribution_required"}}},
+          "then": {"required": ["attribution_text"]}
+        }
+      ]
+    },
+    "transformation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "code_version", "data_version", "parameters"],
+      "properties": {
+        "name": {"$ref": "#/$defs/nonEmptyString"},
+        "code_version": {"$ref": "#/$defs/nonEmptyString"},
+        "data_version": {"$ref": "#/$defs/nonEmptyString"},
+        "parameters": {"type": "object"}
+      }
+    },
+    "lineage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["stage", "record_id", "parent_record_ids"],
+      "properties": {
+        "stage": {"enum": ["raw", "normalized", "derived"]},
+        "record_id": {"$ref": "#/$defs/nonEmptyString"},
+        "parent_record_ids": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/nonEmptyString"},
+          "uniqueItems": true
+        },
+        "transformation": {"$ref": "#/$defs/transformation"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"stage": {"const": "raw"}}},
+          "then": {
+            "properties": {
+              "parent_record_ids": {"maxItems": 0}
+            },
+            "not": {"required": ["transformation"]}
+          },
+          "else": {
+            "required": ["transformation"],
+            "properties": {
+              "parent_record_ids": {"minItems": 1}
+            }
+          }
+        }
+      ]
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "times", "freshness", "policy", "lineage"],
+      "properties": {
+        "source": {"$ref": "#/$defs/sourceIdentity"},
+        "times": {"$ref": "#/$defs/observationTimes"},
+        "freshness": {"$ref": "#/$defs/freshness"},
+        "policy": {"$ref": "#/$defs/usagePolicy"},
+        "lineage": {"$ref": "#/$defs/lineage"}
+      }
+    },
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["start", "end"],
+      "properties": {
+        "start": {"$ref": "#/$defs/awareTimestamp"},
+        "end": {"$ref": "#/$defs/awareTimestamp"},
+        "fiscal_year": {"type": "integer"},
+        "fiscal_period": {"$ref": "#/$defs/nonEmptyString"}
+      }
+    },
+    "currency": {
+      "type": "string",
+      "pattern": "^[A-Z]{3}$"
+    },
+    "recordBase": {
+      "type": "object",
+      "required": ["contract_version", "contract_type", "provenance"],
+      "properties": {
+        "contract_version": {"$ref": "#/$defs/contractVersion"},
+        "contract_type": {"$ref": "#/$defs/nonEmptyString"},
+        "provenance": {"$ref": "#/$defs/provenance"}
+      }
+    }
+  }
+}

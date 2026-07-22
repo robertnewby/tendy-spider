@@ -1,0 +1,167 @@
+:root {
+  color-scheme: dark;
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+  background: #101722;
+  color: #eff4fb;
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  min-width: 320px;
+}
+button {
+  border: 1px solid #718096;
+  border-radius: 0.4rem;
+  background: #192638;
+  color: inherit;
+  cursor: pointer;
+  font: inherit;
+  padding: 0.55rem 0.85rem;
+}
+button:hover,
+button:focus-visible {
+  background: #26394f;
+  outline: 2px solid #91caff;
+  outline-offset: 2px;
+}
+.workspace {
+  margin: 0 auto;
+  max-width: 70rem;
+  padding: 3rem 1.5rem 5rem;
+}
+.masthead {
+  max-width: 51rem;
+  margin-bottom: 2rem;
+}
+.eyebrow {
+  color: #91caff;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  margin: 0 0 0.45rem;
+  text-transform: uppercase;
+}
+h1 {
+  font-size: clamp(2rem, 5vw, 3.4rem);
+  line-height: 1.1;
+  margin: 0;
+}
+h2 {
+  margin: 0;
+}
+h3 {
+  font-size: 1rem;
+  margin: 1.5rem 0 0.65rem;
+}
+.intro,
+.empty-state p,
+.guidance li {
+  color: #c4d0df;
+  line-height: 1.6;
+}
+.status-card,
+.guidance,
+.empty-state {
+  background: #172230;
+  border: 1px solid #33485f;
+  border-radius: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 1.5rem;
+}
+.status-card {
+  border-left: 0.4rem solid #91caff;
+}
+.status-card.ready {
+  border-left-color: #5cd69d;
+}
+.status-card.degraded {
+  border-left-color: #f2c96d;
+}
+.status-card.unready,
+.status-card.error {
+  border-left-color: #ef7e7e;
+}
+.status-heading {
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+}
+.status-dot {
+  background: #91caff;
+  border-radius: 50%;
+  height: 0.85rem;
+  width: 0.85rem;
+}
+.ready .status-dot {
+  background: #5cd69d;
+}
+.degraded .status-dot {
+  background: #f2c96d;
+}
+.unready .status-dot,
+.error .status-dot {
+  background: #ef7e7e;
+}
+.status-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  margin: 1.5rem 0;
+}
+.status-grid div {
+  background: #101722;
+  border-radius: 0.4rem;
+  padding: 0.75rem;
+}
+.status-grid dt {
+  color: #a9bbcf;
+  font-size: 0.8rem;
+}
+.status-grid dd {
+  margin: 0.3rem 0 0;
+}
+.badge {
+  border-radius: 99rem;
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.15rem 0.5rem;
+}
+.badge.ready {
+  background: #164b38;
+  color: #a5f3c9;
+}
+.badge.degraded {
+  background: #604b1c;
+  color: #ffe39c;
+}
+.badge.unready,
+.badge.unavailable {
+  background: #652d35;
+  color: #ffb8bd;
+}
+.dependency-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.dependency-list li {
+  border-top: 1px solid #33485f;
+  display: flex;
+  justify-content: space-between;
+  padding: 0.65rem 0;
+}
+.guidance ul {
+  padding-left: 1.2rem;
+}
+.empty-state {
+  border-style: dashed;
+}
+@media (max-width: 36rem) {
+  .workspace {
+    padding: 2rem 1rem;
+  }
+}

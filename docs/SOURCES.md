@@ -110,3 +110,29 @@ Before enabling any live provider in a shared or commercial environment, record:
 - termination/export behavior.
 
 Provider pricing and free-tier terms change frequently. Recheck official provider terms at implementation time rather than treating this ledger as a contract summary.
+
+## Architecture artifact tooling sources
+
+Observation date: **2026-07-19**. Retrieval date: **2026-07-19**. Freshness:
+point-in-time GitHub snapshot; recheck before installation. These repositories
+were reviewed for their published skill instructions and workflows; inclusion
+here is not a security audit or an approval to install their code.
+
+- [OpenAI Skills Catalog](https://github.com/openai/skills) — Codex-native skill
+  packaging and validation conventions.
+- [OpenAI Google Slides plugin example](https://github.com/openai/plugins/tree/main/plugins/google-slides)
+  — native Slides import, inspection, template migration, and visual-iteration
+  workflow patterns.
+- [Agents365 Mermaid skill](https://github.com/Agents365-ai/mermaid-skill) —
+  text-first diagrams with local or remote rendering, syntax validation, export,
+  and visual self-review.
+- [Agents365 draw.io skill](https://github.com/Agents365-ai/drawio-skill) —
+  editable draw.io generation, export, and rendered-layout repair.
+- [Markdown Viewer skills](https://github.com/markdown-viewer/skills) —
+  architecture, PlantUML, chart, infographic, and related visual skill catalog.
+- [wshobson C4 architecture plugin](https://github.com/wshobson/agents/tree/main/plugins/c4-architecture)
+  — separate context, container, component, and code-level architecture agents.
+- [Codex PPT skill](https://github.com/ningzimu/codex-ppt-skill) — image-first
+  slide generation, speaker notes, and PPTX assembly.
+- [Siril presentation skill](https://github.com/siril9/presentation-skill) —
+  editable PPTX source workspaces and render-based deck QA.

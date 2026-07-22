@@ -1,0 +1,49 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "symbol_mapping",
+  "instrument_id": "instrument:us:example-001",
+  "symbol": "NEW",
+  "venue_id": "venue:XNYS",
+  "valid_from": "2025-03-01T14:30:00Z",
+  "mapping_status": "renamed",
+  "predecessor_symbol": "OLD",
+  "provenance": {
+    "source": {
+      "publisher": "Example Exchange",
+      "source_record_id": "rename-notice-2025-001",
+      "source_url": "https://example.test/notices/rename-2025-001",
+      "dataset": "listing-notices"
+    },
+    "times": {
+      "observed_at": "2025-03-01T14:30:00Z",
+      "knowable_at": "2025-02-20T21:00:00Z",
+      "retrieved_at": "2025-02-20T21:05:00Z",
+      "expires_at": "2025-03-02T14:30:00Z"
+    },
+    "freshness": {
+      "status": "fresh",
+      "determined_at": "2025-02-20T21:05:00Z",
+      "max_age_seconds": 864000,
+      "latency_seconds": 300
+    },
+    "policy": {
+      "display": "attribution_required",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "attribution_text": "Example Exchange listing notice",
+      "terms_url": "https://example.test/terms",
+      "policy_as_of": "2025-02-20T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "normalized",
+      "record_id": "normalized:symbol-mapping:example-001:new",
+      "parent_record_ids": ["raw:rename-notice-2025-001"],
+      "transformation": {
+        "name": "normalize_listing_notice",
+        "code_version": "git:1111111",
+        "data_version": "listing-notices:2025-02-20",
+        "parameters": {}
+      }
+    }
+  }
+}

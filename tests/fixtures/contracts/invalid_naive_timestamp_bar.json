@@ -1,0 +1,36 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "price_bar",
+  "instrument_id": "instrument:us:example-001",
+  "bar_start": "2025-06-02T09:30:00",
+  "bar_end": "2025-06-02T16:00:00",
+  "interval": "1d",
+  "session": {
+    "venue_id": "venue:XNAS",
+    "session": "regular",
+    "source_timezone": "America/New_York"
+  },
+  "unit": "price",
+  "currency": "USD",
+  "adjustment": {"mode": "none"},
+  "open": 100,
+  "high": 102,
+  "low": 99,
+  "close": 101,
+  "provenance": {
+    "source": {"publisher": "Fixture Source", "source_record_id": "bar-1"},
+    "times": {
+      "observed_at": "2025-06-02T16:00:00",
+      "knowable_at": "2025-06-02T16:15:00",
+      "retrieved_at": "2025-06-02T16:20:00"
+    },
+    "freshness": {"status": "fresh", "determined_at": "2025-06-02T16:20:00"},
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "policy_as_of": "2025-01-01T00:00:00Z"
+    },
+    "lineage": {"stage": "raw", "record_id": "raw:bar-1", "parent_record_ids": []}
+  }
+}

@@ -1,0 +1,9 @@
+{
+  "autoSuggestInEditor": true,
+  "autoSuggestMinMatch": 0,
+  "globalFilter": "#task",
+  "removeGlobalFilter": true,
+  "setCancelledDate": true,
+  "setCreatedDate": false,
+  "setDoneDate": true
+}

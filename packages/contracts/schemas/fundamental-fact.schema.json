@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/fundamental-fact.schema.json",
+  "title": "FundamentalFact",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "instrument_id", "concept", "value", "unit", "period", "form",
+        "filing_id", "fact_status"
+      ],
+      "properties": {
+        "contract_type": {"const": "fundamental_fact"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "concept": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "value": {"type": ["number", "string", "boolean"]},
+        "unit": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "period": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/period"},
+        "form": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "filing_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "fact_status": {"enum": ["preliminary", "reported", "restated"]},
+        "supersedes_record_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"fact_status": {"const": "restated"}}},
+          "then": {"required": ["supersedes_record_id"]},
+          "else": {"not": {"required": ["supersedes_record_id"]}}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

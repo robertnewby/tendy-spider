@@ -15,6 +15,8 @@ Before changing code, read:
 5. `docs/DATASET_MATRIX.md`
 6. `docs/ARCHITECTURE.md`
 7. `docs/SOURCES.md`
+8. `docs/ARCHITECTURE_ARTIFACTS.md`
+9. `docs/DEVELOPMENT_AGENTS.md`
 
 If implementation and documentation disagree, stop and update `DECISIONS.md` with the conflict and proposed resolution.
 
@@ -65,6 +67,31 @@ Provide one top-level command for each:
 - local development startup
 
 Document the exact commands in `README.md` and keep CI aligned with them.
+
+## Developer subagents
+
+Project-scoped developer profiles live in `.codex/agents/`; their ownership and
+coordination rules are documented in `docs/DEVELOPMENT_AGENTS.md`.
+
+- Use `lead_developer` for cross-package integration and milestone completion.
+- Use `contracts_data_developer` for canonical schemas, provenance, and migrations.
+- Use `backend_developer` for Python API, orchestration, and provider interfaces.
+- Use `frontend_developer` for the TypeScript research workspace.
+- Use `platform_quality_developer` for infrastructure, CI, and independent checks.
+- Use `solution_architect` for architecture reconciliation, diagrams, and
+  Google Slides-ready technical decks.
+
+For implementation work that splits into independent areas, the main agent may
+delegate bounded tasks to the relevant profiles. Assign non-overlapping file
+ownership before parallel writes. Keep root documentation and shared contract
+edits serialized unless the lead explicitly transfers ownership. Subagents must
+not recursively delegate; the main thread remains responsible for integration
+and final verification.
+
+Architecture artifact work must use the project-scoped
+`create-architecture-artifacts` skill. Keep editable diagram and deck sources
+authoritative, validate rendered outputs before delivery, and record durable
+artifacts in `docs/ARCHITECTURE_ARTIFACTS.md`.
 
 ## Completion discipline
 

@@ -26,6 +26,14 @@ coverage/
 .DS_Store
 Thumbs.db
 
+# Installed Obsidian community-plugin runtime bundles.
+# Versions and checksums are pinned in project-management/PLUGIN_LOCK.md.
+.obsidian/plugins/*/main.js
+.obsidian/plugins/*/manifest.json
+.obsidian/plugins/*/styles.css
+.obsidian/appearance.json
+.obsidian/workspace*.json
+
 # Local data and artifacts
 data/
 artifacts/

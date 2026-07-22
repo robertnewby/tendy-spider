@@ -1,0 +1,31 @@
+{
+  "name": "tendy-spider",
+  "version": "0.0.0",
+  "private": true,
+  "description": "Provider-neutral market-research assistant workspace",
+  "packageManager": "npm@11.11.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "format": "npm run format:root && npm run format --workspaces --if-present",
+    "format:check": "npm run format:root:check && npm run format:check --workspaces --if-present",
+    "format:root": "prettier --write package.json tsconfig.base.json eslint.config.mjs \"infra/**/*.yaml\"",
+    "format:root:check": "prettier --check package.json tsconfig.base.json eslint.config.mjs \"infra/**/*.yaml\"",
+    "lint": "eslint eslint.config.mjs && npm run lint --workspaces --if-present",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "test:unit": "npm run test:unit --workspaces --if-present",
+    "test:integration": "npm run test:integration --workspaces --if-present"
+  },
+  "devDependencies": {
+    "@eslint/js": "9.39.1",
+    "eslint": "9.39.1",
+    "prettier": "3.7.4",
+    "typescript": "5.9.3",
+    "typescript-eslint": "8.48.1"
+  }
+}

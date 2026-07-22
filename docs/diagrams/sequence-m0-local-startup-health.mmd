@@ -1,0 +1,79 @@
+%% Artifact ID: TS-ARC-003
+%% Title: Milestone 0 local startup and health integration sequence
+%% State: CURRENT SOURCE / PARTIALLY VERIFIED EXECUTION
+%% Status: DRAFT — source-only; deterministic render and visual QA are not available
+%% As of: 2026-07-19
+%% Review question: How does one local command establish truthful API and web readiness, including dependency failure and partial availability?
+%% Alt text: Implemented make dev first waits for healthy Postgres and Redis through Docker Compose, then scripts/dev.py supervises API and web processes; the app-only path is smoke-tested, while Docker-backed full startup remains unverified on this host.
+%% Evidence: TASK.md Milestone 0 acceptance evidence; DECISIONS.md D-002, D-012, D-013; docs/ARCHITECTURE.md local deployment; Makefile; scripts/dev.py; services/api/main.py; services/api/tests/test_health.py
+sequenceDiagram
+    autonumber
+    actor PERSON_DEVELOPER as Developer
+    participant ROOT_TOOLING as make dev<br/>[IMPLEMENTED SOURCE; FULL EXECUTION UNVERIFIED]
+    participant INFRA_LOCAL as Docker Compose<br/>[IMPLEMENTED CONFIG; EXECUTION UNVERIFIED]
+    participant STORE_POSTGRES as Postgres<br/>[PINNED; authoritative]
+    participant STORE_REDIS as Redis<br/>[PINNED; non-authoritative]
+    participant DEV_SUPERVISOR as scripts/dev.py<br/>[IMPLEMENTED; APP PATH SMOKE-TESTED]
+    participant CNT_API as FastAPI service<br/>[CURRENT M0]
+    participant CNT_WEB as TypeScript web shell<br/>[CURRENT M0]
+
+    Note over PERSON_DEVELOPER,CNT_WEB: CURRENT SOURCE sequence. Full make dev remains UNVERIFIED because Docker is absent. No provider credential, paid feed, cloud choice, or order execution participates.
+    Note over PERSON_DEVELOPER,CNT_WEB: VERIFIED separately via make dev-apps, which bypasses Compose: API/web launched; liveness 200, readiness 503 without dependencies, web 200, and configured-origin CORS preflight 200.
+    PERSON_DEVELOPER->>ROOT_TOOLING: Invokes make dev
+    activate ROOT_TOOLING
+    ROOT_TOOLING->>INFRA_LOCAL: Invokes make dev-infra [docker compose up -d --wait]
+
+    par Start and wait for Postgres
+        INFRA_LOCAL->>STORE_POSTGRES: Starts pinned container and evaluates pg_isready health check
+        STORE_POSTGRES-->>INFRA_LOCAL: Reports healthy or an explicit failure/timeout
+    and Start and wait for Redis
+        INFRA_LOCAL->>STORE_REDIS: Starts pinned container and evaluates redis-cli ping health check
+        STORE_REDIS-->>INFRA_LOCAL: Reports healthy or an explicit failure/timeout
+    end
+
+    alt Docker is absent, Compose fails, or either health check does not pass
+        INFRA_LOCAL-->>ROOT_TOOLING: Returns non-zero with Compose diagnostics
+        ROOT_TOOLING-->>PERSON_DEVELOPER: Stops before scripts/dev.py; API/web are not started by make dev
+        Note over PERSON_DEVELOPER,ROOT_TOOLING: This Docker-backed branch is source-reviewed but execution remains UNVERIFIED on the current host.
+    else Postgres and Redis report healthy
+        INFRA_LOCAL-->>ROOT_TOOLING: Returns success after --wait
+        ROOT_TOOLING->>DEV_SUPERVISOR: Runs uv run --frozen python scripts/dev.py
+        activate DEV_SUPERVISOR
+        par Start API process group
+            DEV_SUPERVISOR->>CNT_API: Starts Uvicorn on configured host/port
+            CNT_API-->>DEV_SUPERVISOR: Remains running or exits with a process code
+        and Start web process group
+            DEV_SUPERVISOR->>CNT_WEB: Runs npm workspace development server
+            CNT_WEB-->>DEV_SUPERVISOR: Remains running or exits with a process code
+        end
+
+        par Verify API liveness and readiness
+            PERSON_DEVELOPER->>CNT_API: GET /health/live
+            CNT_API-->>PERSON_DEVELOPER: HTTP 200; service=api, status=live, checked_at=UTC; no dependency probes
+            PERSON_DEVELOPER->>CNT_API: GET /health/ready or readiness alias GET /health
+            CNT_API->>STORE_POSTGRES: Checks required persistence readiness
+            STORE_POSTGRES-->>CNT_API: Returns current dependency status
+            CNT_API->>STORE_REDIS: Checks cache/queue readiness
+            STORE_REDIS-->>CNT_API: Returns current dependency status
+        and Verify web shell
+            PERSON_DEVELOPER->>CNT_WEB: Requests the local web root [HTTP]
+            CNT_WEB-->>PERSON_DEVELOPER: Returns the shell or an explicit load failure
+        end
+
+        alt Postgres becomes unavailable
+            CNT_API-->>PERSON_DEVELOPER: HTTP 503; status=unready, postgres=unavailable, read_only_api=unready, background_jobs=unready
+            Note over DEV_SUPERVISOR,CNT_WEB: Processes may remain live, but the web must surface API unavailability rather than imply research readiness.
+        else Postgres remains ready and Redis becomes unavailable
+            CNT_API-->>PERSON_DEVELOPER: HTTP 200; status=degraded, redis=unavailable, read_only_api=degraded, background_jobs=unready
+            Note over STORE_REDIS,CNT_API: Worker and queued-job readiness fail while Redis is unavailable; no job capability is reported ready.
+        else Postgres and Redis remain ready
+            CNT_API-->>PERSON_DEVELOPER: HTTP 200; status=ready, both dependencies ready, read_only_api=ready, background_jobs=ready
+            Note over PERSON_DEVELOPER,CNT_WEB: Acceptance evidence requires both the API health response and the web shell to succeed locally.
+        end
+
+        Note over DEV_SUPERVISOR,CNT_WEB: If either child exits or the developer interrupts, scripts/dev.py terminates both process groups and propagates the exit outcome.
+        deactivate DEV_SUPERVISOR
+    end
+
+    Note over STORE_REDIS,CNT_API: Accepted D-013 DTO semantics distinguish read_only_api from background_jobs in ready, degraded, and unready responses.
+    deactivate ROOT_TOOLING

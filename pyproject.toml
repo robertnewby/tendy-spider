@@ -1,0 +1,70 @@
+[project]
+name = "tendy-spider-workspace"
+version = "0.0.0"
+description = "Provider-neutral market-research assistant workspace"
+requires-python = ">=3.11"
+dependencies = []
+
+[dependency-groups]
+dev = [
+    "fastapi==0.139.2",
+    "httpx==0.28.1",
+    "mypy==1.18.2",
+    "pytest==8.4.2",
+    "ruff==0.14.6",
+    "tendy-spider-contracts[test]",
+    "uvicorn==0.51.0",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/contracts", "services/api"]
+
+[tool.uv.sources]
+tendy-spider-contracts = { workspace = true }
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+extend-exclude = [
+    ".agents",
+    ".codex",
+    ".git",
+    ".mypy_cache",
+    ".obsidian",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".venv",
+    "node_modules",
+]
+
+[tool.ruff.lint]
+select = ["B", "E", "F", "I", "SIM", "UP"]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+line-ending = "lf"
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+namespace_packages = true
+explicit_package_bases = true
+mypy_path = ["packages/contracts/src"]
+files = ["services", "packages/contracts/src", "packages/contracts/tests", "tests", "scripts/dev.py"]
+exclude = [
+    "^\\.agents/",
+    "^\\.codex/",
+    "^\\.obsidian/",
+]
+
+[tool.pytest.ini_options]
+addopts = ["--strict-config", "--strict-markers"]
+pythonpath = ["."]
+testpaths = ["services", "packages", "tests"]
+markers = [
+    "integration: offline integration tests that compose local packages and fixtures",
+]

@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/instrument-identity.schema.json",
+  "title": "InstrumentIdentity",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": ["instrument_id", "asset_class", "name", "active_from"],
+      "properties": {
+        "contract_type": {"const": "instrument_identity"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "asset_class": {"enum": ["equity", "etf", "index", "crypto", "fx", "future", "option", "macro"]},
+        "name": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "issuer_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "primary_venue_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "currency": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/currency"},
+        "active_from": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "active_to": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"}
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

@@ -1,0 +1,13 @@
+[agents]
+# Keep parallelism below the number of developer profiles. Most implementation
+# work should use only the independent roles needed for the current task.
+max_threads = 4
+
+# Subagents may not recursively delegate. The root/lead agent owns coordination.
+max_depth = 1
+
+# Bound unattended batch work while allowing normal repository checks to finish.
+job_max_runtime_seconds = 1800
+
+# Preserve interruption context so the lead can account for partial work.
+interrupt_message = true

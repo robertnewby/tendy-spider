@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/symbol-mapping.schema.json",
+  "title": "SymbolMapping",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": ["instrument_id", "symbol", "venue_id", "valid_from", "mapping_status"],
+      "properties": {
+        "contract_type": {"const": "symbol_mapping"},
+        "instrument_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "symbol": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "venue_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "valid_from": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "valid_to": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/awareTimestamp"},
+        "mapping_status": {"enum": ["active", "renamed", "delisted", "historical"]},
+        "predecessor_symbol": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"mapping_status": {"const": "renamed"}}},
+          "then": {"required": ["predecessor_symbol"]}
+        }
+      ]
+    }
+  ],
+  "unevaluatedProperties": false
+}

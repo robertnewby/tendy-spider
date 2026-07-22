@@ -1,0 +1,52 @@
+{
+  "contract_version": "1.0.0",
+  "contract_type": "macro_observation",
+  "series_id": "EXAMPLE_MACRO_SERIES",
+  "period": {
+    "start": "2026-05-01T00:00:00Z",
+    "end": "2026-05-31T23:59:59Z"
+  },
+  "value": 4.1,
+  "unit": "percent",
+  "frequency": "monthly",
+  "vintage_date": "2026-06-05T12:30:00Z",
+  "observation_status": "preliminary",
+  "provenance": {
+    "source": {
+      "publisher": "Example Statistical Agency",
+      "source_record_id": "EXAMPLE_MACRO_SERIES:2026-05:v1",
+      "source_url": "https://example.test/series/EXAMPLE_MACRO_SERIES"
+    },
+    "times": {
+      "observed_at": "2026-05-31T23:59:59Z",
+      "knowable_at": "2026-06-05T12:30:00Z",
+      "retrieved_at": "2026-06-05T12:31:00Z",
+      "expires_at": "2026-07-05T12:30:00Z"
+    },
+    "freshness": {
+      "status": "stale",
+      "determined_at": "2026-07-18T15:00:00Z",
+      "max_age_seconds": 2592000,
+      "latency_seconds": 60,
+      "reason": "A newer monthly release is expected and this vintage has expired."
+    },
+    "policy": {
+      "display": "allowed",
+      "storage": "permanent",
+      "redistribution": "allowed",
+      "model_training_allowed": true,
+      "policy_as_of": "2026-06-05T00:00:00Z"
+    },
+    "lineage": {
+      "stage": "normalized",
+      "record_id": "normalized:macro:example:2026-05:v1",
+      "parent_record_ids": ["raw:macro:example:2026-05:v1"],
+      "transformation": {
+        "name": "normalize_macro_observation",
+        "code_version": "git:4444444",
+        "data_version": "example-macro:2026-06-05",
+        "parameters": {"missing_value": "."}
+      }
+    }
+  }
+}

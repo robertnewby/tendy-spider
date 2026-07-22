@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://schemas.tendy-spider.dev/v1/evidence-item.schema.json",
+  "title": "EvidenceItem",
+  "allOf": [
+    {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/recordBase"},
+    {
+      "type": "object",
+      "required": [
+        "evidence_id", "claim", "support_type", "source_record_ids", "confidence"
+      ],
+      "properties": {
+        "contract_type": {"const": "evidence_item"},
+        "evidence_id": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "claim": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "support_type": {"enum": ["direct", "derived", "contradictory", "context"]},
+        "source_record_ids": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"}
+        },
+        "excerpt": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "locator": {"$ref": "https://schemas.tendy-spider.dev/v1/common.schema.json#/$defs/nonEmptyString"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      }
+    }
+  ],
+  "unevaluatedProperties": false
+}

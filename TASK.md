@@ -6,7 +6,7 @@ Deliver a usable, read-only vertical slice of an evidence-backed US-equity resea
 
 ## Milestone 0 — Repository and contract foundation
 
-Status: **next**
+Status: **done**
 
 1. Scaffold a monorepo with:
    - `apps/web` — TypeScript web client
@@ -32,6 +32,27 @@ Acceptance criteria:
 - API health endpoint and web shell work locally.
 - Contracts validate timestamps, source identifiers, and freshness.
 - No live provider credential is required by tests.
+
+Acceptance evidence as of 2026-07-21:
+
+- `make check` passes formatting, linting, strict Python and TypeScript typing,
+  11 Python unit tests, 3 frontend unit tests, and 11 fixture integration cases.
+- `make dev-apps` starts the API and web shell together. Local smoke checks
+  returned HTTP 200 for `/health/live`, HTTP 503 with explicit dependency
+  failures for `/health/ready` when Postgres and Redis were absent, HTTP 200 for
+  the web shell, and HTTP 200 for the allowed CORS preflight.
+- Colima with the Docker CLI and Compose plugin is installed and running. The
+  exact `make dev` command started the pinned Postgres and Redis containers,
+  waited for both to become healthy, and started the API and web shell.
+- With the Docker services running, `/health/ready` returned HTTP 200 `ready`;
+  Postgres, Redis, read-only API, and background-job capabilities all reported
+  `ready` with UTC timestamps.
+- Contract fixtures cover required source identity, UTC-aware observation,
+  knowledge, retrieval, and freshness times plus stale, renamed,
+  split-adjusted, restated, short-volume, missing-source, naive-time, and
+  silent-adjustment cases.
+- CI runs locked offline checks and secret scanning without provider
+  credentials.
 
 ## Milestone 1 — Free-data vertical slice
 

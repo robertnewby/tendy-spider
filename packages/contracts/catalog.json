@@ -1,0 +1,17 @@
+{
+  "catalog_version": "1.0.0",
+  "json_schema_dialect": "https://json-schema.org/draft/2020-12/schema",
+  "schemas": {
+    "corporate_action": "schemas/corporate-action.schema.json",
+    "document": "schemas/document.schema.json",
+    "evidence_item": "schemas/evidence-item.schema.json",
+    "filing": "schemas/filing.schema.json",
+    "fundamental_fact": "schemas/fundamental-fact.schema.json",
+    "instrument_identity": "schemas/instrument-identity.schema.json",
+    "macro_observation": "schemas/macro-observation.schema.json",
+    "market_statistic": "schemas/market-statistic.schema.json",
+    "price_bar": "schemas/price-bar.schema.json",
+    "quote": "schemas/quote.schema.json",
+    "symbol_mapping": "schemas/symbol-mapping.schema.json"
+  }
+}
